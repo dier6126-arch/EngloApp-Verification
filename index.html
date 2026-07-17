@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngloApp-Verification</title>
+</head>
+<body>
+<h1>EngloApp-Verification</h1>
+<img
+src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
+class="banner">
+
+<input
+    type="tel"
+    id="phone"
+    placeholder="+998901234567">
+
+<br><br>
+
+<div id="recaptcha-container"></div>
+
+<br>
+
+<button id="sendBtn">
+    Получить код
+</button>
+
+<br><br>
+
+<input
+    type="text"
+    id="code"
+    placeholder="Введите код">
+
+<br><br>
+
+<button id="verifyBtn">
+    Подтвердить код
+</button>
+
+</body> <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBClOpwrnzZrc1M6YwLgO_EWpfhhTh7UBk",
+  authDomain: "englocourse-92426.firebaseapp.com",
+  projectId: "englocourse-92426",
+  storageBucket: "englocourse-92426.firebasestorage.app",
+  messagingSenderId: "260992570219",
+  appId: "1:260992570219:web:963b33526e04f7d43bb22e",
+  measurementId: "G-CCR6Z4LJ49"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+
+document.getElementById("sendBtn").addEventListener("click", async () => {
+
+    const phoneNumber = document.getElementById("phone").value;
+
+    try {
+
+        const confirmationResult = await signInWithPhoneNumber(
+            auth,
+            phoneNumber,
+            window.recaptchaVerifier
+        );
+
+        window.confirmationResult = confirmationResult;
+
+        alert("✅ SMS отправлено!");
+
+    } catch (error) {
+
+        console.error(error);
+        alert(error.message);
+
+    }
+
+});
+
+window.recaptchaVerifier = new RecaptchaVerifier(
+    auth,
+    "recaptcha-container",
+    {
+        size: "normal"
+    }
+);
+
+await window.recaptchaVerifier.render();
+
+console.log("reCAPTCHA готова!");
+
+console.log("Firebase подключен!");
+</script>
+</html>
